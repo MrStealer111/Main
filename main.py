@@ -2,7 +2,7 @@ import telebot, random, re, time, requests
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 # ✅ Bot Token
-TOKEN = "8500839754:AAErhOy07biiGeN2df9D2RfB937kf_06dCs"
+TOKEN = "8004354283:AAGz34ePTQVvHHcjsGICEy52tHeMfYZRS9k"
 bot = telebot.TeleBot(TOKEN)
 
 # ✅ Owner ID (change to your own Telegram ID)
