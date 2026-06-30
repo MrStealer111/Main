@@ -83,8 +83,8 @@ class OutlineAPI:
     # ── Server ────────────────────────────────────────────
     def server_info(self):          return self._req("GET",    "server")
     def rename_server(self, n):     return self._req("PUT",    "server/name",             json={"name": n})
-    def set_def_limit(self, b):     return self._req("PUT",    "server/defaultDataLimit", json={"limit": {"bytes": b}})
-    def del_def_limit(self):        return self._req("DELETE", "server/defaultDataLimit")
+    def set_def_limit(self, b):     return self._req("PUT",    "server/access-key-data-limit", json={"limit": {"bytes": b}})
+    def del_def_limit(self):        return self._req("DELETE", "server/access-key-data-limit")
     def metrics(self):              return self._req("GET",    "metrics/transfer")
 
     # ── Keys ──────────────────────────────────────────────
@@ -92,8 +92,8 @@ class OutlineAPI:
     def create_key(self):           return self._req("POST",   "access-keys")
     def delete_key(self, k):        return self._req("DELETE", f"access-keys/{k}")
     def rename_key(self, k, n):     return self._req("PUT",    f"access-keys/{k}/name",      json={"name": n})
-    def set_limit(self, k, b):      return self._req("PUT",    f"access-keys/{k}/dataLimit", json={"limit": {"bytes": b}})
-    def del_limit(self, k):         return self._req("DELETE", f"access-keys/{k}/dataLimit")
+    def set_limit(self, k, b):      return self._req("PUT",    f"access-keys/{k}/data-limit", json={"limit": {"bytes": b}})
+    def del_limit(self, k):         return self._req("DELETE", f"access-keys/{k}/data-limit")
 
 
 # ── Multiple Server Support ──────────────────────────────────
