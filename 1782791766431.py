@@ -963,7 +963,7 @@ async def on_callback(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     
     # ── Set Expiry ───────────────────────────────────────────────
     elif d.startswith("KEY_SETEXP_"):
-        kid = d[10:]
+        kid = d[11:]
         ctx.user_data.update({"state": S_EXPIRY_SET, "target_kid": kid, "msg_id": q.message.message_id})
         await edit_banner(q,
             f"📅 <b>Key #{kid} — Expiry Date</b>\n"
