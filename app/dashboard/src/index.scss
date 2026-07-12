@@ -1,0 +1,124 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+
+.bg-blue-animate {
+  animation: blur-animate 200ms ease-in;
+  backdrop-filter: blur(10px);
+}
+
+@keyframes blur-animate {
+  from { backdrop-filter: blur(1px); }
+  to { backdrop-filter: blur(10px); }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.green {
+  background: #66ff99;
+}
+.red {
+  background: #e53e3e;
+}
+.orange {
+  background: #fbd38d;
+}
+
+@keyframes green-pulse-animation {
+  0% { box-shadow: 0 0 0 0 rgba(0, 212, 255, 0.6); }
+  70% { box-shadow: 0 0 0 15px rgba(0, 212, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(0, 212, 255, 0); }
+}
+
+@keyframes red-pulse-animation {
+  0% { box-shadow: 0 0 0 0 rgba(255, 51, 102, 0.6); }
+  70% { box-shadow: 0 0 0 15px rgba(255, 51, 102, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 51, 102, 0); }
+}
+
+@keyframes orange-pulse-animation {
+  0% { box-shadow: 0 0 0 0 rgba(255, 140, 0, 0.6); }
+  70% { box-shadow: 0 0 0 15px rgba(255, 140, 0, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 140, 0, 0); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 5px rgba(0, 212, 255, 0.3); }
+  50% { box-shadow: 0 0 20px rgba(0, 212, 255, 0.6); }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+/* Dark Theme Overrides */
+.chakra-ui-dark body,
+body.chakra-ui-dark,
+.chakra-ui-dark {
+  background: #0a0e17 !important;
+  --chakra-colors-chakra-body-bg: #0a0e17 !important;
+  --chakra-colors-chakra-body-text: #e2e8f0 !important;
+}
+
+.chakra-ui-dark ::-webkit-scrollbar { width: 6px; height: 6px; }
+.chakra-ui-dark ::-webkit-scrollbar-track { background: #0a0e17; }
+.chakra-ui-dark ::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #00d4ff40, #7b2ff740);
+  border-radius: 3px;
+}
+.chakra-ui-dark ::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #00d4ff80, #7b2ff780);
+}
+
+.chakra-ui-dark .green {
+  background: linear-gradient(135deg, #00d4ff, #00ff94) !important;
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+}
+
+.chakra-ui-dark .red {
+  background: linear-gradient(135deg, #ff3366, #ff0000) !important;
+  box-shadow: 0 0 20px rgba(255, 51, 102, 0.3);
+}
+
+.chakra-ui-dark .orange {
+  background: linear-gradient(135deg, #ff8c00, #ffd700) !important;
+  box-shadow: 0 0 20px rgba(255, 140, 0, 0.3);
+}
+
+.chakra-ui-dark .chakra-modal__content {
+  background: linear-gradient(135deg, rgba(26, 31, 46, 0.98), rgba(16, 20, 35, 0.98)) !important;
+  backdrop-filter: blur(30px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6) !important;
+}
+
+.chakra-ui-dark .chakra-switch__track[data-checked] {
+  background: linear-gradient(135deg, #00d4ff, #7b2ff7) !important;
+}
+
+.chakra-ui-dark .chakra-progress__fill {
+  background: linear-gradient(90deg, #00d4ff, #7b2ff7) !important;
+  border-radius: 10px !important;
+}
+
+.chakra-ui-dark .chakra-tabs__tab[aria-selected="true"] {
+  color: #00d4ff !important;
+  border-bottom-color: #00d4ff !important;
+}

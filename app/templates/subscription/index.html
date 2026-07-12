@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KoPudding VPN - Subscription</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            min-height: 100vh;
+            background: #0a0e17;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .bg-gradient { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+        .bg-gradient::before {
+            content: '';
+            position: absolute;
+            top: -20%; left: -10%;
+            width: 60%; height: 60%;
+            background: radial-gradient(circle, rgba(6,182,212,0.08) 0%, transparent 70%);
+        }
+        .bg-gradient::after {
+            content: '';
+            position: absolute;
+            bottom: -10%; right: -10%;
+            width: 50%; height: 50%;
+            background: radial-gradient(circle, rgba(139,92,246,0.06) 0%, transparent 70%);
+        }
+        .card {
+            position: relative; z-index: 1;
+            width: 100%; max-width: 520px;
+            background: linear-gradient(135deg, rgba(18,24,38,0.95), rgba(10,14,23,0.98));
+            border: 1px solid rgba(6,182,212,0.12);
+            border-radius: 24px;
+            padding: 40px 32px 32px;
+            box-shadow: 0 0 60px rgba(6,182,212,0.06), inset 0 1px 0 rgba(6,182,212,0.06);
+            backdrop-filter: blur(20px);
+        }
+        .logo { display: flex; align-items: center; gap: 12px; margin-bottom: 32px; }
+        .logo-icon {
+            width: 36px; height: 36px;
+            background: linear-gradient(135deg, #06b6d4, #8b5cf6);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 18px; color: #fff;
+            box-shadow: 0 0 20px rgba(6,182,212,0.3);
+        }
+        .logo-text { font-size: 20px; font-weight: 700; color: #f1f5f9; letter-spacing: -0.3px; }
+        .logo-text span { color: #06b6d4; }
+        .username { font-size: 22px; font-weight: 700; color: #f1f5f9; margin-bottom: 4px; }
+        .subtitle { font-size: 13px; color: #64748b; margin-bottom: 28px; }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+        .stat-item {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 14px;
+            padding: 16px;
+        }
+        .stat-item.full { grid-column: 1 / -1; }
+        .stat-label {
+            font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px;
+            color: #64748b; margin-bottom: 6px;
+        }
+        .stat-value { font-size: 18px; font-weight: 700; color: #e2e8f0; }
+        .stat-value .unit { font-size: 12px; font-weight: 500; color: #64748b; margin-left: 2px; }
+        .status-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 14px; border-radius: 20px;
+            font-size: 13px; font-weight: 600; text-transform: capitalize;
+        }
+        .status-badge::before { content: ''; width: 8px; height: 8px; border-radius: 50%; }
+        .status-badge.active { background: rgba(34,197,94,0.12); color: #4ade80; }
+        .status-badge.active::before { background: #4ade80; box-shadow: 0 0 8px #4ade80; }
+        .status-badge.limited { background: rgba(239,68,68,0.12); color: #f87171; }
+        .status-badge.limited::before { background: #f87171; box-shadow: 0 0 8px #f87171; }
+        .status-badge.expired { background: rgba(251,146,60,0.12); color: #fb923c; }
+        .status-badge.expired::before { background: #fb923c; box-shadow: 0 0 8px #fb923c; }
+        .status-badge.disabled { background: rgba(100,116,139,0.12); color: #94a3b8; }
+        .status-badge.disabled::before { background: #94a3b8; }
+        .progress-section { margin-bottom: 28px; }
+        .progress-header {
+            display: flex; justify-content: space-between;
+            font-size: 12px; color: #94a3b8; margin-bottom: 8px;
+        }
+        .progress-bar {
+            width: 100%; height: 6px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 3px; overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%; border-radius: 3px;
+            background: linear-gradient(90deg, #06b6d4, #8b5cf6);
+            width: 0%; transition: width 0.6s ease;
+        }
+        .links-section { margin-bottom: 16px; }
+        .links-section h3 {
+            font-size: 13px; font-weight: 600; color: #94a3b8;
+            margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.6px;
+        }
+        .link-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 14px;
+            padding: 12px 14px;
+            margin-bottom: 10px;
+        }
+        .link-text {
+            display: block;
+            width: 100%;
+            background: rgba(0,0,0,0.25);
+            border: 1px solid rgba(255,255,255,0.04);
+            border-radius: 8px;
+            padding: 10px 12px;
+            color: #94a3b8;
+            font-size: 12px;
+            font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+            outline: none;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 10px;
+        }
+        .link-actions {
+            display: flex;
+            gap: 6px;
+        }
+        .link-actions .btn {
+            flex: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            padding: 8px 10px;
+            border: none;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+            text-decoration: none;
+        }
+        .btn-connect { background: linear-gradient(135deg, rgba(6,182,212,0.2), rgba(139,92,246,0.15)); color: #22d3ee; }
+        .btn-connect:hover { background: linear-gradient(135deg, rgba(6,182,212,0.3), rgba(139,92,246,0.25)); }
+
+        .btn-qr-icon {
+            width: 36px; height: 36px;
+            display: inline-flex;
+            align-items: center; justify-content: center;
+            background: rgba(255,255,255,0.05);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #94a3b8;
+            flex-shrink: 0;
+        }
+        .btn-qr-icon:hover { background: rgba(139,92,246,0.15); color: #a78bfa; }
+        .footer-text {
+            text-align: center; font-size: 12px; color: #334155;
+            margin-top: 24px; padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.04);
+        }
+        .footer-text strong { color: #475569; }
+        .qr-popup {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            display: none; align-items: center; justify-content: center;
+            z-index: 9999;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(8px);
+        }
+        .qr-popup.open { display: flex; }
+        .qr-box {
+            background: #121826;
+            border: 1px solid rgba(6,182,212,0.15);
+            border-radius: 20px; padding: 28px; text-align: center;
+            box-shadow: 0 0 60px rgba(6,182,212,0.08);
+            position: relative;
+        }
+        .qr-box h3 { color: #e2e8f0; font-size: 16px; margin-bottom: 18px; }
+        .qr-close {
+            position: absolute; top: 12px; right: 16px;
+            background: none; border: none; color: #64748b;
+            font-size: 22px; cursor: pointer; padding: 4px 8px;
+            border-radius: 6px; transition: all 0.2s;
+        }
+        .qr-close:hover { color: #e2e8f0; background: rgba(255,255,255,0.05); }
+        @media (max-width: 480px) {
+            .card { padding: 24px 18px; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .stat-item.full { grid-column: 1; }
+        }
+    </style>
+</head>
+<body>
+<div class="bg-gradient"></div>
+<div class="card">
+    <div class="logo">
+        <div class="logo-icon">K</div>
+        <div class="logo-text">Ko<span>Pudding</span> VPN</div>
+    </div>
+    <div class="username">{{ user.username }}</div>
+    <div class="subtitle">Subscription Overview</div>
+    <div class="stats-grid">
+        <div class="stat-item">
+            <div class="stat-label">Status</div>
+            <span class="status-badge
+                {% if user.status.value == 'active' %}active
+                {% elif user.status.value == 'limited' %}limited
+                {% elif user.status.value == 'expired' %}expired
+                {% elif user.status.value == 'disabled' %}disabled{% endif %}">
+                {{ user.status.value }}
+            </span>
+        </div>
+        <div class="stat-item">
+            <div class="stat-label">Data Limit</div>
+            <div class="stat-value">{% if not user.data_limit %}&infin;{% else %}{{ user.data_limit | bytesformat }}{% endif %}</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-label">Data Used</div>
+            <div class="stat-value">{{ user.used_traffic | bytesformat }}</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-label">Expiry</div>
+            <div class="stat-value">
+                {% if not user.expire %}&infin;
+                {% else %}
+                {% set current_timestamp = now().timestamp() %}
+                {% set remaining_days = ((user.expire - current_timestamp) // (24 * 3600)) %}
+                {{ remaining_days | int }} <span class="unit">days</span>
+                {% endif %}
+            </div>
+        </div>
+        {% if user.data_limit and user.data_limit_reset_strategy and user.data_limit_reset_strategy.value != 'no_reset' %}
+        <div class="stat-item full">
+            <div class="stat-label">Reset</div>
+            <div class="stat-value">Every {{ user.data_limit_reset_strategy.value }}</div>
+        </div>
+        {% endif %}
+    </div>
+    {% if user.data_limit and user.data_limit > 0 %}
+    {% set usage_pct = (user.used_traffic / user.data_limit * 100) | round(1) %}
+    <div class="progress-section">
+        <div class="progress-header">
+            <span>Usage</span>
+            <span>{{ usage_pct }}%</span>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: {{ usage_pct if usage_pct <= 100 else 100 }}%"></div>
+        </div>
+    </div>
+    {% endif %}
+    {% if user.status.value == 'active' %}
+    <div class="links-section">
+        <h3>Subscription</h3>
+        {% for link in user.links %}
+        <div class="link-card">
+            <input class="link-text" type="text" value="{{ sub_url }}" readonly onclick="this.select()">
+            <div class="link-actions">
+                <a class="btn btn-connect" href="{{ link }}" target="_blank" rel="noopener">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                    Connect
+                </a>
+                <button class="btn btn-qr-icon" onclick="openQr('{{ link | e }}')" title="QR Code">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                </button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <div class="footer-text">Powered by <strong>KoPudding VPN</strong></div>
+</div>
+<div class="qr-popup" id="qrPopup">
+    <div class="qr-box">
+        <button class="qr-close" onclick="closeQrPopup()">&times;</button>
+        <h3>Scan QR Code</h3>
+        <div id="qrCodeContainer"></div>
+    </div>
+</div>
+<script>
+
+var qrPopup = document.getElementById('qrPopup');
+var qrContainer = document.getElementById('qrCodeContainer');
+function openQr(link) {
+    qrContainer.innerHTML = '';
+    new QRCode(qrContainer, { text: link, width: 220, height: 220, correctLevel: QRCode.CorrectLevel.L });
+    qrPopup.classList.add('open');
+}
+function closeQrPopup() { qrPopup.classList.remove('open'); }
+qrPopup.addEventListener('click', function(e) { if (e.target === qrPopup) closeQrPopup(); });
+</script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+ARG PYTHON_VERSION=3.12
+
+# ============================================================
+# Stage 1: Build the React dashboard with KoPudding branding
+# ============================================================
+FROM node:20-slim AS dashboard-builder
+
+WORKDIR /dashboard
+COPY app/dashboard/package*.json /dashboard/
+RUN npm ci
+COPY app/dashboard/ /dashboard/
+RUN VITE_BASE_API=/api/ npx vite build
+
+# ============================================================
+# Stage 2: Python dependencies + Xray + all source
+# ============================================================
+FROM python:$PYTHON_VERSION-slim AS base
+
+ENV PYTHONUNBUFFERED=1
+ENV UVICORN_HOST=0.0.0.0
+ENV UVICORN_PORT=8000
+ENV DEBUG=False
+ENV DOCS=False
+
+WORKDIR /code
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends build-essential curl unzip gcc python3-dev libpq-dev \
+    && curl -L https://github.com/Gozargah/Marzban-scripts/raw/master/install_latest_xray.sh | bash \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt /code/
+RUN python3 -m pip install --upgrade pip setuptools \
+    && pip install --no-cache-dir --upgrade -r /code/requirements.txt
+
+COPY . /code
+
+# Copy pre-built dashboard from stage 1
+COPY --from=dashboard-builder /dashboard/dist/ /code/app/dashboard/build/
+
+RUN ln -sf /code/marzban-cli.py /usr/bin/marzban-cli \
+    && chmod +x /usr/bin/marzban-cli \
+    && marzban-cli completion install --shell bash 2>/dev/null || true
+
+EXPOSE 8000
+
+VOLUME ["/var/lib/marzban"]
+
+CMD ["bash", "-c", "alembic upgrade head; python main.py"]
