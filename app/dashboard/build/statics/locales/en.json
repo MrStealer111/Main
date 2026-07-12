@@ -188,17 +188,5 @@
     "usersTable.noUser": "There is no user added to the system",
     "usersTable.noUserMatched": "It seems there is no user matched with what you are looking for",
     "usersTable.status": "status",
-    "usersTable.total": "Total",
-    "header.telegramSettings": "Telegram Settings",
-    "telegram.title": "Telegram Settings",
-    "telegram.botToken": "Bot Token",
-    "telegram.adminId": "Admin ID(s)",
-    "telegram.adminIdHint": "Comma-separated Telegram user IDs",
-    "telegram.loggerChannelId": "Logger Channel ID",
-    "telegram.proxyUrl": "Proxy URL",
-    "telegram.defaultVlessFlow": "Default VLESS Flow",
-    "telegram.save": "Save Settings",
-    "telegram.saved": "Telegram settings saved. Restart container to apply.",
-    "telegram.errorLoading": "Failed to load Telegram settings",
-    "telegram.errorSaving": "Failed to save Telegram settings"
+    "usersTable.total": "Total"
 }

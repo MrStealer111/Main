@@ -1,4 +1,4 @@
-import { Box, BoxProps, Card, chakra, HStack, Text } from "@chakra-ui/react";
+import { Box, BoxProps, Card, chakra, HStack, Text, VStack, Progress } from "@chakra-ui/react";
 import {
   ChartBarIcon,
   ChartPieIcon,
@@ -12,30 +12,23 @@ import { fetch } from "service/http";
 import { formatBytes, numberWithCommas } from "utils/formatByte";
 
 const TotalUsersIcon = chakra(UsersIcon, {
-  baseStyle: {
-    w: 5,
-    h: 5,
-    position: "relative",
-    zIndex: "2",
-  },
+  baseStyle: { w: 5, h: 5, position: "relative", zIndex: "2" },
 });
 
 const NetworkIcon = chakra(ChartBarIcon, {
-  baseStyle: {
-    w: 5,
-    h: 5,
-    position: "relative",
-    zIndex: "2",
-  },
+  baseStyle: { w: 5, h: 5, position: "relative", zIndex: "2" },
 });
 
 const MemoryIcon = chakra(ChartPieIcon, {
-  baseStyle: {
-    w: 5,
-    h: 5,
-    position: "relative",
-    zIndex: "2",
-  },
+  baseStyle: { w: 5, h: 5, position: "relative", zIndex: "2" },
+});
+
+const CpuIcon = chakra(CpuChipIcon, {
+  baseStyle: { w: 5, h: 5, position: "relative", zIndex: "2" },
+});
+
+const ServerIcon = chakra(ServerStackIcon, {
+  baseStyle: { w: 5, h: 5, position: "relative", zIndex: "2" },
 });
 
 type StatisticCardProps = {
@@ -51,7 +44,7 @@ const StatisticCard: FC<PropsWithChildren<StatisticCardProps>> = ({
 }) => {
   return (
     <Card
-      p={6}
+      p={5}
       borderWidth="1px"
       borderColor="light-border"
       bg="#F9FAFB"
@@ -63,60 +56,40 @@ const StatisticCard: FC<PropsWithChildren<StatisticCardProps>> = ({
       display="flex"
       justifyContent="space-between"
       flexDirection="row"
+      className="stat-card"
     >
-      <HStack alignItems="center" columnGap="4">
-        <Box
-          p="2"
-          position="relative"
-          color="white"
-          _before={{
-            content: `""`,
-            position: "absolute",
-            top: 0,
-            left: 0,
-            bg: "primary.400",
-            display: "block",
-            w: "full",
-            h: "full",
-            borderRadius: "5px",
-            opacity: ".5",
-            z: "1",
-          }}
-          _after={{
-            content: `""`,
-            position: "absolute",
-            top: "-5px",
-            left: "-5px",
-            bg: "primary.400",
-            display: "block",
-            w: "calc(100% + 10px)",
-            h: "calc(100% + 10px)",
-            borderRadius: "8px",
-            opacity: ".4",
-            z: "1",
-          }}
-        >
-          {icon}
-        </Box>
+      <VStack alignItems="flex-start" spacing={1}>
         <Text
-          color="gray.600"
-          _dark={{
-            color: "gray.300",
-          }}
-          fontWeight="medium"
-          textTransform="capitalize"
-          fontSize="sm"
+          color="gray.500"
+          _dark={{ color: "rgba(255,255,255,0.5)" }}
+          fontWeight="600"
+          textTransform="uppercase"
+          fontSize="xs"
+          letterSpacing="0.05em"
         >
           {title}
         </Text>
-      </HStack>
-      <Box fontSize="3xl" fontWeight="semibold" mt="2">
-        {content}
+        <Box className="stat-value" fontSize="2xl" fontWeight="700" lineHeight="1.2">
+          {content}
+        </Box>
+      </VStack>
+      <Box
+        className="stat-icon"
+        color="#00d4ff"
+        p={3}
+        borderRadius="12px"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+      >
+        {icon}
       </Box>
     </Card>
   );
 };
+
 export const StatisticsQueryKey = "statistics-query-key";
+
 export const Statistics: FC<BoxProps> = (props) => {
   const { version } = useDashboard();
   const { data: systemData } = useQuery({
@@ -129,29 +102,29 @@ export const Statistics: FC<BoxProps> = (props) => {
     },
   });
   const { t } = useTranslation();
+
+  const memPercent = systemData
+    ? Math.round((systemData.mem_used / systemData.mem_total) * 100)
+    : 0;
+
   return (
     <HStack
       justifyContent="space-between"
-      gap={0}
-      columnGap={{ lg: 4, md: 0 }}
-      rowGap={{ lg: 0, base: 4 }}
+      gap={4}
       display="flex"
       flexDirection={{ lg: "row", base: "column" }}
+      flexWrap="wrap"
       {...props}
     >
       <StatisticCard
         title={t("activeUsers")}
         content={
           systemData && (
-            <HStack alignItems="flex-end">
-              <Text>{numberWithCommas(systemData.users_active)}</Text>
-              <Text
-                fontWeight="normal"
-                fontSize="lg"
-                as="span"
-                display="inline-block"
-                pb="5px"
-              >
+            <HStack spacing={1}>
+              <Text as="span" className="stat-value" display="inline" fontSize="2xl">
+                {numberWithCommas(systemData.users_active)}
+              </Text>
+              <Text as="span" fontSize="sm" color="gray.500" _dark={{ color: "gray.500" }} fontWeight="normal">
                 / {numberWithCommas(systemData.total_user)}
               </Text>
             </HStack>
@@ -173,19 +146,25 @@ export const Statistics: FC<BoxProps> = (props) => {
         title={t("memoryUsage")}
         content={
           systemData && (
-            <HStack alignItems="flex-end">
-              <Text>{formatBytes(systemData.mem_used, 1, true)[0]}</Text>
-              <Text
-                fontWeight="normal"
-                fontSize="lg"
-                as="span"
-                display="inline-block"
-                pb="5px"
-              >
-                {formatBytes(systemData.mem_used, 1, true)[1]} /{" "}
-                {formatBytes(systemData.mem_total, 1)}
-              </Text>
-            </HStack>
+            <VStack align="start" spacing={1} w="full">
+              <HStack spacing={1}>
+                <Text className="stat-value" fontSize="lg">
+                  {formatBytes(systemData.mem_used, 1, true)[0]}
+                </Text>
+                <Text fontSize="xs" color="gray.500" fontWeight="normal">
+                  {formatBytes(systemData.mem_used, 1, true)[1]} /{" "}
+                  {formatBytes(systemData.mem_total, 1)}
+                </Text>
+              </HStack>
+              <Progress
+                value={memPercent}
+                size="xs"
+                w="full"
+                borderRadius="full"
+                colorScheme="cyan"
+                bg="gray.700"
+              />
+            </VStack>
           )
         }
         icon={<MemoryIcon />}

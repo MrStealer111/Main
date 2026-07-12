@@ -67,6 +67,22 @@
   100% { transform: translateX(200%); }
 }
 
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes stat-card-in {
+  from { opacity: 0; transform: translateY(30px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
 /* Dark Theme Overrides */
 .chakra-ui-dark body,
 body.chakra-ui-dark,
@@ -121,4 +137,66 @@ body.chakra-ui-dark,
 .chakra-ui-dark .chakra-tabs__tab[aria-selected="true"] {
   color: #00d4ff !important;
   border-bottom-color: #00d4ff !important;
+}
+
+/* Stat Cards */
+.chakra-ui-dark .stat-card {
+  background: linear-gradient(135deg, rgba(26, 31, 46, 0.9), rgba(16, 20, 35, 0.9)) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  border-radius: 16px !important;
+  transition: all 0.3s ease !important;
+  animation: stat-card-in 0.5s ease forwards !important;
+}
+
+.chakra-ui-dark .stat-card:hover {
+  transform: translateY(-2px) !important;
+  border-color: rgba(0, 212, 255, 0.2) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 40px rgba(0, 212, 255, 0.05) !important;
+}
+
+.chakra-ui-dark .stat-card .stat-icon {
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(123, 47, 247, 0.15)) !important;
+  border-radius: 12px !important;
+  padding: 10px !important;
+  transition: all 0.3s ease !important;
+}
+
+.chakra-ui-dark .stat-card:hover .stat-icon {
+  transform: scale(1.05);
+  box-shadow: 0 0 30px rgba(0, 212, 255, 0.15);
+}
+
+.chakra-ui-dark .stat-card .stat-value {
+  background: linear-gradient(135deg, #00d4ff, #7b2ff7) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  font-weight: 700 !important;
+}
+
+.chakra-ui-dark .stat-card .stat-label {
+  color: rgba(255, 255, 255, 0.6) !important;
+  font-size: 0.85rem !important;
+  font-weight: 500 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+}
+
+/* Stagger animation delays */
+.stat-card:nth-child(1) { animation-delay: 0.05s !important; }
+.stat-card:nth-child(2) { animation-delay: 0.1s !important; }
+.stat-card:nth-child(3) { animation-delay: 0.15s !important; }
+.stat-card:nth-child(4) { animation-delay: 0.2s !important; }
+
+/* Circle pulse for online status */
+.chakra-ui-dark .circle.pulse {
+  animation: pulse-glow 2s infinite !important;
+}
+
+.circle {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
 }
