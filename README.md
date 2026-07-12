@@ -170,10 +170,4 @@ Cloudflare Dashboard မှာ —
 | `docker compose logs -f` | Log ကြည့် |
 | `docker compose build` | Rebuild |
 
----
 
-## Screenshots
-
-![Screenshot](screenshots/ss1.png)
-
-> Screenshots များကို `screenshots/` folder အတွင်းသို့ ထည့်သွင်းနိုင်ပါသည်။
